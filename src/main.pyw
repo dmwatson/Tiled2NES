@@ -1,5 +1,6 @@
-#
-# Things to figure out:
+#!/usr/bin/python3
+# Tiled2NES - Converts Tiled CSV maps to C-compatible arrays for use
+# with nesdoug's 6502 library
 # 
 
 import sys
