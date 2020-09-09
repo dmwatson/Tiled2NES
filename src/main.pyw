@@ -1,6 +1,5 @@
-#!/usr/bin/python3
-# Tiled2NES - Converts Tiled CSV maps to C-compatible arrays for use
-# with nesdoug's 6502 library
+#
+# Tiled2NES - Generate collision maps from Tiled in NES-compatible format
 # 
 
 import sys
@@ -126,6 +125,8 @@ class MainWindow(QMainWindow):
                 outFile.write("#ifndef %s\n#define %s\n\n" %
                             (guardName, guardName))
 
+            objNames = list()
+
             for i in range(self.numRows):
                 # Get item in table
                 inputFilename = self.ui.tableFiles.item(i, 4).text()
@@ -141,8 +142,9 @@ class MainWindow(QMainWindow):
                 cols = len(lines[0])
 
                 for i in range(rows):
+                    outFile.write("\t")
                     for j in range(cols):
-                        outFile.write("\t%s," % lines[i][j])
+                        outFile.write("%s," % lines[i][j])
                     outFile.write("\n")
 
                 # delete that last comma, back it up
@@ -150,10 +152,14 @@ class MainWindow(QMainWindow):
                 z = z - 3
                 outFile.seek(z)
                 outFile.write("\n};\n\n")
+                objNames.append( objName )
 
 
+            if self.ui.checkAllMaps.isChecked():
+                
+                outFile.write("const unsigned char * All_Collision_Maps[] = {%s};\n" % ",".join(objNames))
             if self.ui.checkCodeGuards.isChecked():
-                outFile.write("\n\n#endif\n")
+                outFile.write("\n#endif\n")
             outFile.close()
     # end exportFile
 
